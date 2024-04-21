@@ -9,48 +9,38 @@
 6. Stop the Program
 ## PROGRAM
 ```
-import time
-class SlidingWindowProtocol:
-    def __init__(self, window_size):
-        self.window_size = window_size
-        self.timeout = 1
-        self.buffer = []
-
-    def send(self, frames):
-        print("Sending frames:", frames)
-        self.buffer.extend(frames)
-        start_time = time.time()
-        next_frame_to_ack = 0
-
-        while self.buffer:
-            if time.time() - start_time >= self.timeout:
-                print("Timeout! Resending frames:", self.buffer[:self.window_size])
-                start_time = time.time()
-            else:
-                if next_frame_to_ack < len(self.buffer):
-                    ack_frame = self.receive_ack(next_frame_to_ack)
-                    if ack_frame is not None:
-                        print("Acknowledgment received for frame:", ack_frame)
-                        next_frame_to_ack += 1
-                        self.buffer = self.buffer[next_frame_to_ack:]
-                        next_frame_to_ack = 0
-
-    def receive_ack(self, frame_number):
-        received = input("Enter '1' to simulate acknowledgment for frame {}: ".format(frame_number))
-        if received == '1':
-            return frame_number
-        else:
-            return None
-
-if __name__ == "__main__":
-    protocol = SlidingWindowProtocol(window_size=3)
-    frames_to_send = ['Frame1', 'Frame2', 'Frame3', 'Frame4', 'Frame5']
-
-    protocol.send(frames_to_send)
-
+import socket                                                              
+s=socket.socket() 
+s.bind(('localhost',8000)) 
+s.listen(5) 
+c,addr=s.accept() 
+size=int(input("Enter number of frames to send : ")) 
+l=list(range(size)) 
+s=int(input("Enter Window Size : ")) 
+st=0 
+i=0 
+while True: 
+while(i<len(l)): 
+st+=s 
+c.send(str(l[i:st]).encode()) 
+ack=c.recv(1024).decode() 
+if ack: 
+print(ack) 
+i+=s 
+ 
+ 
+server: 
+import socket                                                              
+s=socket.socket() 
+s.connect(('localhost',8000)) 
+REG NO: 
+while True: 
+print(s.recv(1024).decode()) 
+s.send("acknowledgement recived from the server".encode()) 
 ```
 ## OUPUT
-![Uploading Screenshot (137).png…]()
+![Screenshot (173)](https://github.com/RahulvVenugopal/2b_SLIDING_WINDOW_PROTOCOL/assets/144132514/3b9efa1a-49a1-4f87-af0a-bbafeb63c930)
+
 
 ## RESULT
 Thus, python program to perform stop and wait protocol was successfully executed
